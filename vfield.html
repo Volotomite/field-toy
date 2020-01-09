@@ -1,0 +1,341 @@
+<html lang="eng">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<style>
+body
+{background-color: white;}
+* {margin: 0;padding: 0;}
+#mycanvas
+{position: absolute;}
+</style>
+</head>
+<body>
+<canvas id="mycanvas"  ></canvas>
+<script>
+
+//canvas ini
+var cvs = document.getElementById("mycanvas");
+var ctx = cvs.getContext("2d");
+var xscreen=document.documentElement.clientWidth;
+var yscreen=document.documentElement.clientHeight;
+cvs.width = window.innerWidth;
+cvs.height = window.innerHeight;
+ctx.fillStyle = "black";
+ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+//cube ini, order (x y z)
+class surf {
+  constructor(firstName, lastName) {
+    this.firstName = firstName
+    this.lastName = lastName
+  }
+  getFullName() {
+    return this.firstName + ' ' + this.lastName
+  }
+}
+density=''
+while(isNaN(density) || density==''){
+	density = window.prompt('Enter cube split accuracy (num of subsegments in cube segment)');
+	density=parseInt(density)
+}
+segment_step=2/density
+cube = []
+for(sur=0;sur<6;sur++){
+	 axis=sur%3;
+	 orientation_first = (sur-3)<0;
+
+	 for(i=0;i<density;i++){
+		 for(j=0;j<density;j++){
+			 cube.push([]);
+			 if(axis==0){
+				 if(orientation_first){
+					 point=[-1,-1+segment_step*i,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1,-1+segment_step*(i+1),-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1,-1+segment_step*(i+1),-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+					 point=[-1,-1+segment_step*i,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+				 }
+				 else{
+					 point=[1,-1+segment_step*i,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[1,-1+segment_step*(i+1),-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[1,-1+segment_step*(i+1),-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+					 point=[1,-1+segment_step*i,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+				 }
+			 }
+			 if(axis==1){
+				 if(orientation_first){
+					 point=[-1+segment_step*i,-1,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*i,-1,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+				 }
+				 else{
+					 point=[-1+segment_step*i,1,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),1,-1+segment_step*j]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),1,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*i,1,-1+segment_step*(j+1)]
+					 cube[cube.length-1].push(point);
+				 }
+			 }
+			 if(axis==2){
+				 if(orientation_first){
+					 point=[-1+segment_step*i,-1+segment_step*j,-1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1+segment_step*j,-1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1+segment_step*(j+1),-1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*i,-1+segment_step*(j+1),-1]
+					 cube[cube.length-1].push(point);
+				 }
+				 else{
+					 point=[-1+segment_step*i,-1+segment_step*j,1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1+segment_step*j,1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*(i+1),-1+segment_step*(j+1),1]
+					 cube[cube.length-1].push(point);
+					 point=[-1+segment_step*i,-1+segment_step*(j+1),1]
+					 cube[cube.length-1].push(point);
+				 }
+			 }
+		 }
+	 }
+}
+var fov_scal = 1000;
+var center = [];
+var bias_x = 0;
+var bias_y = 0;
+var bias_z = 10;
+console.log(cube.length)
+function rotateX(angle){
+	for (area=0;area<cube.length;area++){
+		 for(i=0;i<4;i++){
+			 // store copy for multiplication
+			 x=cube[area][i][0]
+			 y=cube[area][i][1]
+			 z=cube[area][i][2]
+
+			 cube[area][i][0]=x
+			 cube[area][i][1]=y*Math.cos(angle)-z*Math.sin(angle)
+			 cube[area][i][2]=y*Math.sin(angle)+z*Math.cos(angle)
+		 }
+	}
+}
+function rotateY(angle){
+	for (area=0;area<cube.length;area++){
+		 for(i=0;i<4;i++){
+			 // store copy for multiplication
+			 x=cube[area][i][0]
+			 y=cube[area][i][1]
+			 z=cube[area][i][2]
+
+			 cube[area][i][0]=x*Math.cos(angle)+z*Math.sin(angle)
+			 cube[area][i][1]=y
+			 cube[area][i][2]=-x*Math.sin(angle)+z*Math.cos(angle)
+		 }
+	}
+}
+function rotateZ(angle){
+	for (area=0;area<cube.length;area++){
+		 for(i=0;i<4;i++){
+			 // store copy for multiplication
+			 x=cube[area][i][0]
+			 y=cube[area][i][1]
+			 z=cube[area][i][2]
+
+			 cube[area][i][0]=x*Math.cos(angle)-y*Math.sin(angle)
+			 cube[area][i][1]=x*Math.sin(angle)+y*Math.cos(angle)
+			 cube[area][i][2]=z
+		 }
+	}
+}
+var is_field_applied = false
+var direction_positive = true
+var Fx = '0'
+var Fy = '0'
+var Fz = '0'
+var fired = false;
+var rotate=false;
+// MOUSE ROTATION EVENTS
+var is_dragging = false;
+
+var drag_x = 0;
+var drag_y = 0;
+
+var delta_x = 0;
+var delta_y= 0;
+document.addEventListener('mousemove', e => {
+  if (is_dragging === true) {
+  //  drawLine(context, x, y, e.clientX - rect.left, e.clientY - rect.top);
+
+	// USE DELTA AS COEFF FOR ROTATE
+    delta_x = e.clientX - drag_x ;
+    delta_y = e.clientY - drag_y ;
+		console.log('SLICE');
+		console.log(delta_x);
+		console.log(delta_y);
+		drag_x=e.clientX;
+		drag_y=e.clientY;
+
+  }
+});
+document.addEventListener('mousedown', e => {
+	//console.log('now it is drawing')
+	drag_x = e.clientX ;
+	drag_y = e.clientY ;
+  is_dragging = true;
+});
+window.addEventListener('mouseup', e => {
+  if (is_dragging === true) {
+		//console.log('now is not ')
+
+    is_dragging = false;
+  }
+});
+
+
+
+
+eval("window.eval_thingy = function (x, y, z) { return ["+Fx+","+Fy+","+Fz+"]; }");
+document.addEventListener("keydown", event => {
+
+	if (event.which == 32){
+		rotate = true
+	}
+  if ( event.which == 13) {
+
+		Fx = window.prompt('Enter Fx(x,y,z)');
+		Fy = window.prompt('Enter Fy(x,y,z)');
+		Fz = window.prompt('Enter Fz(x,y,z)');
+		eval("window.eval_thingy = function (x, y, z) { return ["+Fx+","+Fy+","+Fz+"]; }");
+
+  }
+	if ( event.which == 39) { // -->
+		console.log('raora')
+		is_field_applied = true
+		direction_positive = true
+  }
+	if ( event.which == 37) { // <--
+		is_field_applied = true
+		direction_positive = false
+  }
+
+});
+document.addEventListener("keyup", event => {
+
+	if ( event.which == 39) { // -->
+		is_field_applied = false
+
+  }
+	if ( event.which == 37) { // <--
+		is_field_applied = false
+
+  }
+});
+function apply_field(scalar_direct){
+
+	for (area=0;area<cube.length;area++){
+		 for(i=0;i<4;i++){
+			 // store copy for vector field transofrm
+			 x=cube[area][i][0]
+			 y=cube[area][i][1]
+			 z=cube[area][i][2]
+			 Fset = eval_thingy(x,y,z)
+			 cube[area][i][0]=x+Fset[0]*scalar_direct
+			 cube[area][i][1]=y+Fset[1]*scalar_direct
+			 cube[area][i][2]=z+Fset[2]*scalar_direct
+		 }
+	}
+}
+function draw()
+{
+	//bias_x+=0.01
+	//bias_z+=0.01
+	xscreen=document.documentElement.clientWidth;
+	yscreen=document.documentElement.clientHeight;
+	cvs.width = window.innerWidth;
+	cvs.height = window.innerHeight;
+	center[0] = cvs.width/2;
+	center[1] = cvs.height/2;
+
+
+ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.lineTo(20, 100);
+ctx.lineTo(70, 100);
+ctx.closePath();
+ctx.stroke();
+
+cube.sort(function(a,b){
+	farest_a = Math.sqrt((a[0][0]+bias_x)**2+(a[0][1]+bias_y)**2+(a[0][2]+bias_z)**2)//a[0][2] Math.sqrt(a[0][0]**2+a[0][1]**2+a[0][2]**2)
+	farest_b = Math.sqrt((b[0][0]+bias_x)**2+(b[0][1]+bias_y)**2+(b[0][2]+bias_z)**2)//b[0][2] Math.sqrt()
+	for(i=1;i<4;i++){
+		f_b = Math.sqrt((b[i][0]+bias_x)**2+(b[i][1]+bias_y)**2+(b[i][2]+bias_z)**2)
+		f_a = Math.sqrt((a[i][0]+bias_x)**2+(a[i][1]+bias_y)**2+(a[i][2]+bias_z)**2)
+		if(f_b>farest_b){
+			farest_b=f_b//Math.sqrt(b[i][0]**2+b[i][1]**2+b[i][2]**2)//b[i][2]
+		}
+		if(f_a>farest_a){
+			farest_a=f_a//Math.sqrt(a[i][0]**2+a[i][1]**2+a[i][2]**2)//a[i][2]
+		}
+	}
+	a[4]=farest_a**2/60
+	b[4]=farest_b**2/60
+	return farest_b - farest_a
+
+})
+if(is_field_applied){
+	field_step = 0.01;
+	if(direction_positive){
+		field_step=-field_step
+	}
+	apply_field(field_step)
+}
+if(is_dragging){
+rotateX(-delta_y/100);
+rotateY(-delta_x/100);
+}
+	ctx.fillStyle = "black";
+	ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+	ctx.strokeStyle = "#black";
+	ctx.lineWidth = 0.1;
+	for(i=0;i<cube.length;i++){
+		ctx.beginPath();
+		for(j=0;j<cube[i].length-1;j++){
+			if(j==0){
+				ctx.moveTo(center[0]+fov_scal*(cube[i][j][0]+bias_x)/(cube[i][j][2]+bias_z), center[1]-fov_scal*(cube[i][j][1]+bias_y)/(cube[i][j][2]+bias_z));
+			}
+			ctx.lineTo(center[0]+fov_scal*(cube[i][j+1][0]+bias_x)/(cube[i][j+1][2]+bias_z), center[1]-fov_scal*(cube[i][j+1][1]+bias_y)/(cube[i][j+1][2]+bias_z));
+		}
+		ctx.closePath();
+		ctx.fillStyle = 'rgb(0, '+128/(cube[i][4])+', '+255/(cube[i][4])+')';
+		ctx.fill();
+		ctx.stroke();
+	}
+	requestAnimationFrame(draw);
+}
+draw();
+
+
+
+
+</script>
+</body>
+</html>
