@@ -210,9 +210,9 @@ window.addEventListener('mouseup', e => {
 });
 
 
-
-
-eval("window.eval_thingy = function (x, y, z) { return ["+Fx+","+Fy+","+Fz+"]; }");
+ t=0
+timer_on = false
+eval("window.eval_thingy = function (x, y, z, t) { return ["+Fx+","+Fy+","+Fz+"]; }");
 document.addEventListener("keydown", event => {
 
 	if (event.which == 32){
@@ -220,21 +220,36 @@ document.addEventListener("keydown", event => {
 	}
   if ( event.which == 13) {
 
-		Fx = window.prompt('Enter Fx(x,y,z)');
-		Fy = window.prompt('Enter Fy(x,y,z)');
-		Fz = window.prompt('Enter Fz(x,y,z)');
-		eval("window.eval_thingy = function (x, y, z) { return ["+Fx+","+Fy+","+Fz+"]; }");
+		Fx = window.prompt('Enter Fx(x,y,z,t)');
+		Fy = window.prompt('Enter Fy(x,y,z,t)');
+		Fz = window.prompt('Enter Fz(x,y,z,t)');
+		eval("window.eval_thingy = function (x, y, z, t) { return ["+Fx+","+Fy+","+Fz+"]; }");
 
   }
 	if ( event.which == 39) { // -->
 		console.log('raora')
 		is_field_applied = true
 		direction_positive = true
+		timer_on = false
+		t=0
   }
 	if ( event.which == 37) { // <--
 		is_field_applied = true
 		direction_positive = false
+		timer_on = false
+		t=0
   }
+	if (event.which == 84){
+		if(timer_on){
+			t=0
+			is_field_applied = false
+
+		}else{
+			is_field_applied = true
+			direction_positive = false
+		}
+		timer_on=!timer_on
+	}
 
 });
 document.addEventListener("keyup", event => {
@@ -256,7 +271,7 @@ function apply_field(scalar_direct){
 			 x=cube[area][i][0]
 			 y=cube[area][i][1]
 			 z=cube[area][i][2]
-			 Fset = eval_thingy(x,y,z)
+			 Fset = eval_thingy(x,y,z,t)
 			 cube[area][i][0]=x+Fset[0]*scalar_direct
 			 cube[area][i][1]=y+Fset[1]*scalar_direct
 			 cube[area][i][2]=z+Fset[2]*scalar_direct
@@ -328,6 +343,9 @@ rotateY(-delta_x/100);
 		ctx.fillStyle = 'rgb(0, '+128/(cube[i][4])+', '+255/(cube[i][4])+')';
 		ctx.fill();
 		ctx.stroke();
+	}
+	if(timer_on){
+		t+=1/60
 	}
 	requestAnimationFrame(draw);
 }
