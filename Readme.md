@@ -18,7 +18,15 @@ For example, your inputs might be:
 "Math.sin(y*y+z*z)", "Math.sin(x*x+z*z)", "Math.sin(x*x+y*y)"
 or say
 "z*y","y*t","-x*y"
+these are cool fields
 
 6. Press "t" to start timer and morphing, press again to turn it off.
-Right arrow will move points in positive direction, and left arrow will move them in negative direction
+Also right arrow will move points in positive direction, and left arrow will move them in negative direction and will ignore time
 Scrolling will move camera
+
+At start cube is 2x2x2 size, its center placed at (0,0,0) if you want to move cube at some point (a,b,c) of vector field before you apply it then just add it to point(x,y,z) like so:
+"Math.sin((y+b)*(y+b)+(z+c)*(z+c))", "Math.sin((x+a)*(x+a)+(z+c)*(z+c))", "Math.sin((x+a)*(x+a)+(y+b)*(y+b))"
+or say
+"(z+c)*(y+b)","(y+b)*t","-(x+a)*(y+b)"
+
+Also if you want to scale your field, then just multiply these numbers
