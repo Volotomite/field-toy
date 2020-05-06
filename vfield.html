@@ -39,7 +39,8 @@ while(isNaN(density) || density==''){
 	density = window.prompt('Enter cube split accuracy (num of subsegments in cube segment)');
 	density=parseInt(density)
 }
-segment_step=2/density
+cube_size = 1.2
+segment_step=2*cube_size/density
 cube = []
 for(sur=0;sur<6;sur++){
 	 axis=sur%3;
@@ -50,67 +51,67 @@ for(sur=0;sur<6;sur++){
 			 cube.push([]);
 			 if(axis==0){
 				 if(orientation_first){
-					 point=[-1,-1+segment_step*i,-1+segment_step*j]
+					 point=[-cube_size,-cube_size+segment_step*i,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1,-1+segment_step*(i+1),-1+segment_step*j]
+					 point=[-cube_size,-cube_size+segment_step*(i+1),-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1,-1+segment_step*(i+1),-1+segment_step*(j+1)]
+					 point=[-cube_size,-cube_size+segment_step*(i+1),-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
-					 point=[-1,-1+segment_step*i,-1+segment_step*(j+1)]
+					 point=[-cube_size,-cube_size+segment_step*i,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
 				 }
 				 else{
-					 point=[1,-1+segment_step*i,-1+segment_step*j]
+					 point=[cube_size,-cube_size+segment_step*i,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[1,-1+segment_step*(i+1),-1+segment_step*j]
+					 point=[cube_size,-cube_size+segment_step*(i+1),-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[1,-1+segment_step*(i+1),-1+segment_step*(j+1)]
+					 point=[cube_size,-cube_size+segment_step*(i+1),-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
-					 point=[1,-1+segment_step*i,-1+segment_step*(j+1)]
+					 point=[cube_size,-cube_size+segment_step*i,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
 				 }
 			 }
 			 if(axis==1){
 				 if(orientation_first){
-					 point=[-1+segment_step*i,-1,-1+segment_step*j]
+					 point=[-cube_size+segment_step*i,-cube_size,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1,-1+segment_step*j]
+					 point=[-cube_size+segment_step*(i+1),-cube_size,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1,-1+segment_step*(j+1)]
+					 point=[-cube_size+segment_step*(i+1),-cube_size,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*i,-1,-1+segment_step*(j+1)]
+					 point=[-cube_size+segment_step*i,-cube_size,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
 				 }
 				 else{
-					 point=[-1+segment_step*i,1,-1+segment_step*j]
+					 point=[-cube_size+segment_step*i,cube_size,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),1,-1+segment_step*j]
+					 point=[-cube_size+segment_step*(i+1),cube_size,-cube_size+segment_step*j]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),1,-1+segment_step*(j+1)]
+					 point=[-cube_size+segment_step*(i+1),cube_size,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*i,1,-1+segment_step*(j+1)]
+					 point=[-cube_size+segment_step*i,cube_size,-cube_size+segment_step*(j+1)]
 					 cube[cube.length-1].push(point);
 				 }
 			 }
 			 if(axis==2){
 				 if(orientation_first){
-					 point=[-1+segment_step*i,-1+segment_step*j,-1]
+					 point=[-cube_size+segment_step*i,-cube_size+segment_step*j,-cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1+segment_step*j,-1]
+					 point=[-cube_size+segment_step*(i+1),-cube_size+segment_step*j,-cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1+segment_step*(j+1),-1]
+					 point=[-cube_size+segment_step*(i+1),-cube_size+segment_step*(j+1),-cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*i,-1+segment_step*(j+1),-1]
+					 point=[-cube_size+segment_step*i,-cube_size+segment_step*(j+1),-cube_size]
 					 cube[cube.length-1].push(point);
 				 }
 				 else{
-					 point=[-1+segment_step*i,-1+segment_step*j,1]
+					 point=[-cube_size+segment_step*i,-cube_size+segment_step*j,cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1+segment_step*j,1]
+					 point=[-cube_size+segment_step*(i+1),-cube_size+segment_step*j,cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*(i+1),-1+segment_step*(j+1),1]
+					 point=[-cube_size+segment_step*(i+1),-cube_size+segment_step*(j+1),cube_size]
 					 cube[cube.length-1].push(point);
-					 point=[-1+segment_step*i,-1+segment_step*(j+1),1]
+					 point=[-cube_size+segment_step*i,-cube_size+segment_step*(j+1),cube_size]
 					 cube[cube.length-1].push(point);
 				 }
 			 }
@@ -356,8 +357,11 @@ rotateY(-delta_x/100);
 			ctx.lineTo(center[0]+fov_scal*(cube[i][j+1][0]+bias_x)/(cube[i][j+1][2]+bias_z+bias_z_scroll), center[1]-fov_scal*(cube[i][j+1][1]+bias_y)/(cube[i][j+1][2]+bias_z+bias_z_scroll));
 		}
 		ctx.closePath();
-		ctx.fillStyle = 'rgb(0, '+(25.6+102.4/(cube[i][4]))+', '+(51+204/(cube[i][4]))+')';
-	//	ctx.fillStyle = 'rgb(0, 25.6, 51)';
+	//	ctx.fillStyle = 'rgb(0, '+(25.6+102.4/(cube[i][4]))+', '+(51+204/(cube[i][4]))+')';
+	//	ctx.fillStyle = 	'rgb('+156/(cube[i][4])+','+53/(cube[i][4])+','+156/(cube[i][4])+')';
+		ctx.fillStyle = 'rgb(0,'+ 150/cube[i][4]+',' +150/cube[i][4]+')';
+
+	//			rgb(156,53,156)
 		ctx.fill();
 		ctx.stroke();
 	}
